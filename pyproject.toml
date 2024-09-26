@@ -7,7 +7,6 @@ name = "luigi-chromadb-target"
 version = "0.1.0"
 description = "A Luigi Target implementation using ChromaDB."
 readme = "README.md"
-readme-content-type = "text/markdown"
 authors = [
     { name = "Pawel Gasiorowski", email = "p.gasiorowski@axent.pl" }
 ]
@@ -16,7 +15,7 @@ requires-python = ">=3.6"
 keywords = ["luigi", "chromadb", "target"]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache Software License"
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
 
