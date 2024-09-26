@@ -13,17 +13,15 @@ pip install luigi-chromadb-target
 ## Usage
 
 ```python
-from luigi_chromadb_target import ChromaDBRegistry, ChromaTarget
+from luigi_chromadb_target import ChromaTarget
 import chromadb
 
-# Initialize and register the database
-registry = ChromaDBRegistry()
+# initialize the client (and the collection)
 client = chromadb.Client()
 client.create_collection(name="documents")
-registry.register_database('my_database', client)
 
 # Use ChromaTarget
-target = ChromaTarget('chroma://my_database/documents/my_document')
+target = ChromaTarget(client, "documents", "my-document-id")
 with target.open('w') as f:
     f.write('This is some content.')
 

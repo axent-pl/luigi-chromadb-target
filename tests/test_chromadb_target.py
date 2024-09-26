@@ -1,19 +1,17 @@
 import unittest
-from luigi_chromadb_target import ChromaDBRegistry, ChromaTarget
 import chromadb
+from luigi_chromadb_target import ChromaTarget
 
 class TestChromaTarget(unittest.TestCase):
 
     def setUp(self):
-        # Initialize the ChromaDB client and register it
-        self.registry = ChromaDBRegistry()
         self.client = chromadb.Client()
-        self.client.create_collection(name="documents")
-        self.registry.register_database('testdb', self.client)
-        self.document_url = 'chroma://testdb/documents/foo'
+        self.collection_name = 'documents'
+        self.client.create_collection(name=self.collection_name, get_or_create=True)
+        self.document_id = 'foo'
 
     def test_write_and_read(self):
-        target = ChromaTarget(self.document_url)
+        target = ChromaTarget(self.client, self.collection_name, self.document_id)
         with target.open('w') as f:
             f.write('content')
 
@@ -22,14 +20,14 @@ class TestChromaTarget(unittest.TestCase):
             self.assertEqual(content, 'content')
 
     def test_exists(self):
-        target = ChromaTarget(self.document_url)
+        target = ChromaTarget(self.client, self.collection_name, self.document_id)
         self.assertFalse(target.exists())
         with target.open('w') as f:
             f.write('content')
         self.assertTrue(target.exists())
 
     def test_nonexistent_document(self):
-        target = ChromaTarget('chroma://testdb/documents/nonexistent')
+        target = ChromaTarget(self.client, self.collection_name, 'non-existent-document-id')
         with self.assertRaises(FileNotFoundError):
             with target.open('r') as f:
                 f.read()
